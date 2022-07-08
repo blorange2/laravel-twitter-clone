@@ -73,4 +73,20 @@ class User extends Authenticatable
             'user_id'
         );
     }
+
+    /**
+     * Retrieve all tweets from users this user is following.
+     *
+     * SQL: "select * from `tweets` inner join `followers` on `followers`.`id` = `tweets`.`user_id` where `followers`.`user_id` is null"
+     */
+    public function tweetsFromFollowing()
+    {
+        return $this->hasManyThrough(
+            Tweet::class,
+            Follower::class,
+            'user_id',
+            'user_id',
+            'following_id'
+        );
+    }
 }

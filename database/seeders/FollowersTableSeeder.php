@@ -19,6 +19,11 @@ class FollowersTableSeeder extends Seeder
         ]);
 
         DB::table('followers')->insert([
+            'user_id' => 1,
+            'following_id' => 3,
+        ]);
+
+        DB::table('followers')->insert([
             'user_id' => 2,
             'following_id' => 1,
         ]);
