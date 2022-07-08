@@ -1,8 +1,6 @@
 <?php
-
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -41,4 +39,38 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Retrieve all users that a user is following.
+     *
+     * SQL: "select * from `users`
+     * inner join `followers` on `users`.`id` = `followers`.`following_id`
+     * where `followers`.`user_id` = ?"
+     */
+    public function following()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'followers',
+            'user_id',
+            'following_id'
+        );
+    }
+
+    /**
+     * Retrieve all users that are following this user.
+     *
+     * SQL: "select * from `users`
+     * inner join `followers` on `users`.`id` = `followers`.`user_id`
+     * where `followers`.`following_id` = ?"
+     */
+    public function followers()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'followers',
+            'following_id',
+            'user_id'
+        );
+    }
 }
