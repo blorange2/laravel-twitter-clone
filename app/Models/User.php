@@ -41,11 +41,17 @@ class User extends Authenticatable
     ];
 
     /**
+     *
+     */
+    public function avatar()
+    {
+        return 'https://www.gravatar.com/avatar/' . md5($this->email) . '?d=mp';
+    }
+
+    /**
      * Retrieve all users that a user is following.
      *
-     * SQL: "select * from `users`
-     * inner join `followers` on `users`.`id` = `followers`.`following_id`
-     * where `followers`.`user_id` = ?"
+     * SQL: "select * from `users` inner join `followers` on `users`.`id` = `followers`.`following_id` where `followers`.`user_id` = ?"
      */
     public function following()
     {
@@ -60,9 +66,7 @@ class User extends Authenticatable
     /**
      * Retrieve all users that are following this user.
      *
-     * SQL: "select * from `users`
-     * inner join `followers` on `users`.`id` = `followers`.`user_id`
-     * where `followers`.`following_id` = ?"
+     * SQL: "select * from `users` inner join `followers` on `users`.`id` = `followers`.`user_id` where `followers`.`following_id` = ?"
      */
     public function followers()
     {
@@ -86,6 +90,7 @@ class User extends Authenticatable
             Follower::class,
             'user_id',
             'user_id',
+            'id',
             'following_id'
         );
     }
