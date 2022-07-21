@@ -22,12 +22,14 @@ export default{
         }
     },
 
-    // The actions 
+    // The actions that this store can perform, these usually map to methods in components
     actions: {
-        async getTweets({ commit }){
-            let response = await axios.get('/api/timeline');
+        async getTweets({ commit }, url){
+            let response = await axios.get(url);
 
             commit('PUSH_TWEETS', response.data.data);
+
+            return response;
         }
     }
 }

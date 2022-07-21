@@ -1,26 +1,75 @@
 <template>
   <div>
-    <!-- <app-tweet
+    <app-tweet
         v-for="tweet in tweets"
         :key="tweet.id"
         :tweet="tweet"
-    /> -->
+    />
+
+    <div
+        v-if="tweets.length"
+        v-observe-visibility="{
+            callback: handleScrolledToBottomOfTimeline
+        }"
+    >
+
+    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions, mapState } from 'vuex';
 
 export default {
-  methods: {
-    ...mapActions({
-        getTweets: 'timeline/getTweets'
-    })
-  },
+    data(){
+        return{
+            page: 1,
+            lastPage: 1, 
+        }
+    },
 
-  mounted(){
-    console.log("Mounted");
-    this.getTweets();
-  }
+    computed: {
+        ...mapGetters({
+            tweets: 'timeline/tweets'
+        }),
+
+        urlWithPage(){
+            return `/api/timeline?page=${this.page}`;
+        }
+    },
+
+    methods: {
+        ...mapActions({
+            getTweets: 'timeline/getTweets'
+        }),
+
+        loadTweets(){
+            this.getTweets(this.urlWithPage).then((response) => {
+                this.lastPage = response.data.meta.last_page;
+            }).catch((err) => {
+                console.log(err);
+            });
+        },
+
+        handleScrolledToBottomOfTimeline(isVisible){
+            if(!isVisible){
+                return;
+            }
+
+            if(this.lastPage == this.page){
+                return;
+            }
+
+            this.page++;
+
+            this.loadTweets();
+
+
+        }
+    },
+
+    mounted(){
+        this.loadTweets();
+    }
 }
 </script>

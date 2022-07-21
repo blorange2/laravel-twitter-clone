@@ -44,6 +44,9 @@ const store = new Vuex.Store({
     }
 })
 
+import VueObserveVisibility , { ObserveVisibility } from 'vue-observe-visibility';
+Vue.use(VueObserveVisibility);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
